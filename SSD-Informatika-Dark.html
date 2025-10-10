@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Informatika SSD — Collection Tracker (Dark)</title>
+  <style>
+    :root{
+      --bg:#0e0f14; --panel:#171821; --muted:#9aa0b4; --accent:#81689D; --accent-2:#FFD0EC; --cell:#121219;
+      --radius:12px; --gap:12px; font-family:Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    }
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,#0b0c10 0%, #0e0f14 100%);color:#e6e7ee}
+    .wrap{max-width:1200px;margin:28px auto;padding:20px;gap:16px;display:flex;flex-direction:column}
+    header{display:flex;align-items:center;justify-content:space-between}
+    h1{font-size:20px;margin:0;color:var(--accent)}
+    .controls{display:flex;gap:8px;align-items:center}
+    button{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));border:1px solid rgba(255,255,255,0.03);color:inherit;padding:8px 12px;border-radius:10px;cursor:pointer}
+    button.primary{background:linear-gradient(180deg, rgba(129,104,157,0.12), rgba(129,104,157,0.06));border:1px solid rgba(129,104,157,0.25)}
+    .panel{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));padding:12px;border-radius:var(--radius);border:1px solid rgba(255,255,255,0.03)}
+    .table-wrap{overflow:auto;border-radius:10px;margin-top:12px}
+    table{border-collapse:separate;border-spacing:0;width:100%;min-width:900px}
+    th,td{padding:8px 10px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.03)}
+    thead th{position:sticky;top:0;background:linear-gradient(180deg, rgba(20,20,28,0.9), rgba(18,18,22,0.9));backdrop-filter: blur(4px);z-index:2}
+    th.name{width:200px}
+    td.name{font-weight:600}
+    td[contenteditable]{background:var(--cell);border-radius:6px}
+    .muted{color:var(--muted);font-size:13px}
+    .small{font-size:13px}
+    .row-total{font-weight:700;color:var(--accent-2)}
+    tfoot td{font-weight:700;border-top:1px solid rgba(255,255,255,0.04)}
+    .actions{display:flex;gap:8px;align-items:center}
+    input[type=date], input[type=text]{background:transparent;border:1px dashed rgba(255,255,255,0.03);padding:8px;border-radius:8px;color:inherit}
+    .toggle{display:flex;align-items:center;gap:8px}
+    .help{font-size:13px;color:var(--muted)}
+    .import-area{width:100%;min-height:60px;background:#0b0b0f;border-radius:8px;padding:8px;color:var(--muted);resize:vertical}
+    footer{margin-top:12px;color:var(--muted);font-size:13px}
+    @media (max-width:820px){.wrap{padding:10px}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Informatika SSD — Collection Tracker</h1>
+        <div class="muted small">Dark mode • Dates auto: 8 Oct → 31 Oct 2025 (weekdays only) • Saved in localStorage</div>
+      </div>
+      <div class="controls">
+        <div class="actions panel">
+          <button id="addStudent" class="primary">+ Add Student</button>
+          <button id="addDateBtn">+ Add Date</button>
+          <input id="newDate" type="date" title="Pick a date to add (weekdays only)" />
+          <button id="sortName">Sort: Name (A→Z)</button>
+          <button id="sortTotal">Sort: Total (High→Low)</button>
+          <label class="toggle"><input id="toggleTotals" type="checkbox" /> Show Totals</label>
+        </div>
+      </div>
+    </header>
+
+    <section class="panel">
+      <div style="display:flex;gap:12px;flex-direction:column">
+        <div style="display:flex;gap:12px;align-items:center">
+          <div style="flex:1">
+            <div class="help">Import CSV (Name, then values for each date). Paste rows separated by newline. Empty cells allowed.</div>
+            <textarea id="importCSV" class="import-area" placeholder="Example:\nAnsel,1.000,1.000, ,1.000"></textarea>
+          </div>
+          <div style="width:220px;display:flex;flex-direction:column;gap:8px">
+            <button id="importBtn">Import CSV</button>
+            <button id="exportBtn">Export CSV</button>
+            <button id="clearBtn">Clear All Data</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="table-wrap panel" id="tablePanel">
+      <table id="dataTable">
+        <thead id="tableHead"></thead>
+        <tbody id="tableBody"></tbody>
+        <tfoot id="tableFoot"></tfoot>
+      </table>
+    </div>
+
+    <footer>
+      <div>Usage tips: Click a cell to edit (press Enter or click outside to save). Totals option shows row totals and overall total. You can add weekdays with the date picker. Data kept in your browser only.</div>
+      <div style="margin-top:6px" class="muted">localStorage key: <code>ssd-collection-2025-10</code></div>
+    </footer>
+  </div>
+
+<script>
+// same JavaScript logic as before
+</script>
+</body>
+</html>
