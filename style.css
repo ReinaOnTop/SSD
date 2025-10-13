@@ -14,20 +14,19 @@
   font-family: "Poppins", sans-serif;
 }
 
-body {
-  margin: 0;
-  background: var(--bg-dark);
+html, body {
+  background: radial-gradient(circle at top, #0f0f13 0%, #0b0b10 100%);
   color: var(--text);
+  color-scheme: dark;
+  margin: 0;
+  padding: 0;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   overflow-x: hidden;
 }
 
-html, body {
-  background-color: var(--bg-dark);
-  color-scheme: dark;
-}
-
-/* === Header & Toolbar === */
+/* === Header === */
 header {
   position: sticky;
   top: 0;
@@ -42,6 +41,7 @@ header {
   color: var(--accent);
 }
 
+/* === Toolbar === */
 .toolbar {
   position: sticky;
   top: 60px;
@@ -58,115 +58,6 @@ header {
 
 /* === Buttons === */
 button {
-  background: var(--bg-card);
-  color: var(--text);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  font-weight: 500;
-}
-
-button:hover {
-  background: var(--accent-hover);
-  border-color: var(--accent-hover);
-  color: #fff;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-}
-
-button:active {
-  transform: translateY(0);
-  box-shadow: none;
-}
-
-/* === Table Container === */
-.table-container {
-  max-width: 95%;
-  margin: 2rem auto;
-  background: var(--bg-card);
-  border-radius: 16px;
-  overflow-x: auto;
-  padding: 1rem;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-}
-
-/* === Table === */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: center;
-  color: var(--text);
-}
-
-th, td {
-  border-bottom: 1px solid var(--border);
-  padding: 0.7rem;
-}
-
-th {
-  color: var(--accent);
-  font-weight: 600;
-  position: sticky;
-  top: 120px;
-  background: rgba(15, 15, 20, 0.8);
-  backdrop-filter: blur(10px);
-}
-
-tr:nth-child(even) {
-  background: rgba(255, 255, 255, 0.03);
-}
-
-tr:hover {
-  background: rgba(255, 255, 255, 0.06);
-}
-
-/* === Totals & Compact Mode === */
-.show-totals {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  color: var(--text-dim);
-  margin-top: 1rem;
-}
-
-/* === Layout Centering & Edge Fix === */
-html, body {
-  background: radial-gradient(circle at top, #0f0f13 0%, #0b0b10 100%);
-  color-scheme: dark;
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-/* centers all content horizontally */
-.wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 40px 16px;
-  box-sizing: border-box;
-}
-
-/* make panel backgrounds smoother & balanced visually */
-.panel {
-  background: rgba(25, 25, 32, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.04);
-  border-radius: 14px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(8px);
-}
-
-/* make buttons smoother and visually balanced */
-button {
   background: linear-gradient(180deg, rgba(129,104,157,0.12), rgba(129,104,157,0.06));
   border: 1px solid rgba(129,104,157,0.25);
   border-radius: 10px;
@@ -174,6 +65,7 @@ button {
   color: #f1f1f1;
   cursor: pointer;
   transition: all 0.25s ease;
+  font-weight: 500;
 }
 
 button:hover {
@@ -187,15 +79,76 @@ button:active {
   box-shadow: none;
 }
 
-/* make table text more readable and cells more balanced */
-table {
-  border-collapse: separate;
-  border-spacing: 0;
+/* === Layout Centering === */
+.wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
   width: 100%;
-  min-width: 900px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 16px;
+  box-sizing: border-box;
 }
 
-/* === Fix Name Column Cutoff & Improve Readability === */
+/* === Panels === */
+.panel {
+  background: rgba(25, 25, 32, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 14px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  margin-bottom: 1rem;
+  padding: 1rem;
+}
+
+/* === Table Container === */
+.table-container {
+  max-width: 95%;
+  margin: 2rem auto;
+  background: var(--bg-card);
+  border-radius: 16px;
+  overflow-x: auto;
+  padding: 1rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+}
+
+.table-wrap {
+  overflow-x: auto;
+  overflow-y: visible;
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(20,20,28,0.8), rgba(10,10,14,0.9));
+  border: 1px solid rgba(255,255,255,0.04);
+  padding: 10px;
+}
+
+/* === Table === */
+table {
+  width: 100%;
+  min-width: 900px;
+  border-collapse: separate;
+  border-spacing: 0;
+  text-align: center;
+  color: var(--text);
+}
+
+th, td {
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  transition: background 0.15s ease-in-out;
+}
+
+th {
+  color: var(--accent);
+  font-weight: 600;
+  position: sticky;
+  top: 120px;
+  background: rgba(15, 15, 20, 0.8);
+  backdrop-filter: blur(10px);
+}
+
+/* === Name Column Fix === */
 th.name, td.name {
   width: auto !important;
   min-width: 160px;
@@ -209,32 +162,26 @@ th.name, td.name {
 td.name {
   font-weight: 600;
   color: var(--accent);
+  text-align: left;
 }
 
-/* === Table Wrap Improvements === */
-.table-wrap {
-  overflow-x: auto;
-  overflow-y: visible;
-  border-radius: 14px;
-  background: linear-gradient(180deg, rgba(20,20,28,0.8), rgba(10,10,14,0.9));
-  border: 1px solid rgba(255,255,255,0.04);
-  padding: 10px;
-}
-
-/* === Make Table More Readable === */
-table {
-  border-spacing: 0;
-  border-collapse: separate;
-}
-
-th, td {
-  padding: 10px 14px;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
+/* === Table Interactions === */
+tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.03);
 }
 
 tr:hover td {
   background: rgba(255, 255, 255, 0.05);
-  transition: background 0.15s ease-in-out;
+}
+
+/* === Totals & Compact Mode === */
+.show-totals {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: var(--text-dim);
+  margin-top: 1rem;
 }
 
 .compact-mode table td,
