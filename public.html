@@ -155,138 +155,25 @@
     </div>
   </div>
 
-  <script>
-  const LS_KEY = 'ssd-collection-2025-10';
-  const GOAL = 176000;
-  let dates = [], students = [], showTotals = false;
-  const ANIMATE_SPEED = 800; // ms for animation
+<script>
+const target = 176000; // your goal in rupiah
 
-  const tableHead = document.getElementById('tableHead');
-  const tableBody = document.getElementById('tableBody');
-  const tableFoot = document.getElementById('tableFoot');
-  const progressFill = document.getElementById('progressFill');
-  const progressText = document.getElementById('progressText');
+function updateProgress() {
+  const table = document.querySelector("table");
+  let total = 0;
 
-  function fmtDateShort(d) {
-    return new Date(d).toLocaleDateString(undefined, { day: '2-digit', month: 'short' });
+  for (let i = 1; i < table.rows.length; i++) {
+    const amount = table.rows[i].cells[1]?.textContent.replace(/[^\d]/g, "");
+    if (amount) total += parseInt(amount);
   }
 
-  function parseNumber(str) {
-    if (!str) return NaN;
-    const s = String(str).replace(/\./g, '').replace(/,/g, '.').trim();
-    return Number(s);
-  }
+  const percent = Math.min((total / target) * 100, 100);
+  document.getElementById("progress-bar").style.width = percent + "%";
+  document.getElementById("progress-label").textContent =
+    `Rp${total.toLocaleString()} / Rp${target.toLocaleString()} (${percent.toFixed(1)}%)`;
+}
 
-  function formatNumber(n) {
-    if (n === '' || n == null || isNaN(n)) return '';
-    const int = Math.floor(n);
-    return int.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-  }
-
-  function computeRowTotal(s) {
-    return dates.reduce((sum, d) => {
-      const v = s.values[d];
-      const n = parseNumber(v);
-      return isNaN(n) ? sum : sum + n;
-    }, 0);
-  }
-
-  function totalForDate(d) {
-    return students.reduce((sum, s) => {
-      const v = s.values[d];
-      const n = parseNumber(v);
-      return isNaN(n) ? sum : sum + n;
-    }, 0);
-  }
-
-  function overallTotal() {
-    return students.reduce((sum, s) => sum + computeRowTotal(s), 0);
-  }
-
-  function getProgressColor(progress) {
-    if (progress < 50) return 'linear-gradient(90deg, #81689d, #ffd0ec)';
-    if (progress < 80) return 'linear-gradient(90deg, #b784c5, #ffa8d6)';
-    return 'linear-gradient(90deg, #00d68f, #b2ffea)';
-  }
-
-  let lastProgress = 0;
-
-  function updateProgress() {
-    const total = overallTotal() * 1000; // Each 1.000 = Rp1,000
-    const progress = Math.min((total / GOAL) * 100, 100);
-
-    // Animate from previous progress
-    const start = lastProgress;
-    const end = progress;
-    const startTime = performance.now();
-
-    function animate(time) {
-      const t = Math.min((time - startTime) / ANIMATE_SPEED, 1);
-      const current = start + (end - start) * t;
-      progressFill.style.width = current + "%";
-      progressFill.style.background = getProgressColor(current);
-      progressText.textContent = 
-        `Rp${total.toLocaleString()} / Rp${GOAL.toLocaleString()} (${current.toFixed(1)}%)`;
-
-      if (t < 1) requestAnimationFrame(animate);
-      else lastProgress = end;
-    }
-    requestAnimationFrame(animate);
-  }
-
-  function loadAndRender() {
-    const raw = localStorage.getItem(LS_KEY);
-    if (!raw) return;
-    try {
-      const parsed = JSON.parse(raw);
-      dates = parsed.dates || [];
-      students = parsed.students || [];
-      showTotals = parsed.showTotals || false;
-      students.sort((a, b) => a.name.localeCompare(b.name, 'en', { sensitivity: 'base' }));
-    } catch (e) {
-      console.warn('parse error', e);
-    }
-    render();
-    updateProgress();
-  }
-
-  function render() {
-    tableHead.innerHTML = '';
-    tableBody.innerHTML = '';
-    tableFoot.innerHTML = '';
-
-    const trh = document.createElement('tr');
-    trh.innerHTML =
-      `<th class="name">Name</th>` +
-      dates.map(d => `<th>${fmtDateShort(d)}</th>`).join('') +
-      (showTotals ? `<th>Total</th>` : '');
-    tableHead.appendChild(trh);
-
-    for (const s of students) {
-      const tr = document.createElement('tr');
-      tr.innerHTML =
-        `<td class="name">${s.name}</td>` +
-        dates.map(d => `<td>${s.values[d] || ''}</td>`).join('') +
-        (showTotals ? `<td class="row-total">${formatNumber(computeRowTotal(s))}</td>` : '');
-      tableBody.appendChild(tr);
-    }
-
-    if (showTotals) {
-      const trf = document.createElement('tr');
-      trf.innerHTML =
-        `<td class="name">Overall Total</td>` +
-        dates.map(d => `<td>${formatNumber(totalForDate(d))}</td>`).join('') +
-        `<td>${formatNumber(overallTotal())}</td>`;
-      tableFoot.appendChild(trf);
-    }
-  }
-
-  window.addEventListener('storage', e => {
-    if (e.key === LS_KEY) loadAndRender();
-  });
-
-  loadAndRender();
-  setInterval(loadAndRender, 2000);
+updateProgress();
 </script>
 </body>
 </html>
