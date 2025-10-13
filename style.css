@@ -132,6 +132,89 @@ tr:hover {
   margin-top: 1rem;
 }
 
+/* === Layout Centering & Edge Fix === */
+html, body {
+  background: radial-gradient(circle at top, #0f0f13 0%, #0b0b10 100%);
+  color-scheme: dark;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* centers all content horizontally */
+.wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 16px;
+  box-sizing: border-box;
+}
+
+/* make panel backgrounds smoother & balanced visually */
+.panel {
+  background: rgba(25, 25, 32, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 14px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+}
+
+/* make buttons smoother and visually balanced */
+button {
+  background: linear-gradient(180deg, rgba(129,104,157,0.12), rgba(129,104,157,0.06));
+  border: 1px solid rgba(129,104,157,0.25);
+  border-radius: 10px;
+  padding: 8px 14px;
+  color: #f1f1f1;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+button:hover {
+  background: linear-gradient(180deg, rgba(159,132,195,0.25), rgba(129,104,157,0.1));
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+button:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* make table text more readable and cells more balanced */
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  min-width: 900px;
+}
+
+th, td {
+  padding: 10px 12px;
+  text-align: left;
+}
+
+th {
+  background: rgba(30, 30, 40, 0.85);
+  backdrop-filter: blur(6px);
+  color: #c9b4ff;
+  font-weight: 600;
+}
+
+tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+tr:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
 .compact-mode table td,
 .compact-mode table th {
   padding: 0.4rem;
