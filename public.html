@@ -184,20 +184,28 @@ async function fetchData() {
   }
 }
 
-function updateTable(entries) {
+function parseValue(str) {
+  // convert "1.000" to 1000
+  return Number(str.replace(/\./g, ""));
+}
+
+function updateTable(students) {
   tableBody.innerHTML = "";
-  entries.forEach(e => {
+  students.forEach(s => {
+    const total = Object.values(s.values || {}).reduce((sum, v) => sum + parseValue(v), 0);
     const tr = document.createElement("tr");
     tr.innerHTML = `
-      <td class="name">${e.name}</td>
-      <td>Rp${formatNumber(e.total)}</td>
+      <td class="name">${s.name}</td>
+      <td>Rp${formatNumber(total)}</td>
     `;
     tableBody.appendChild(tr);
   });
 }
 
-function updateProgress(entries) {
-  const total = entries.reduce((sum, e) => sum + e.total, 0);
+function updateProgress(students) {
+  const total = students.reduce((sum, s) => {
+    return sum + Object.values(s.values || {}).reduce((subSum, v) => subSum + parseValue(v), 0);
+  }, 0);
   const percent = Math.min((total / GOAL) * 100, 100);
   progressFill.style.width = `${percent}%`;
   progressFill.style.background = getProgressColor(percent);
@@ -206,9 +214,9 @@ function updateProgress(entries) {
 
 async function refresh() {
   const json = await fetchData();
-  if (!json || !json.entries) return;
-  updateTable(json.entries);
-  updateProgress(json.entries);
+  if (!json || !json.students) return;
+  updateTable(json.students);
+  updateProgress(json.students);
 }
 
 refresh();
