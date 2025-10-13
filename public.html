@@ -134,16 +134,16 @@
     <div>
       <h1>SSD Collection Tracker</h1>
       <div class="muted">Public view</div>
+    </div>
 
-      <div class="progress-section">
-        <h2 style="font-size:16px; color:var(--accent-2); margin-bottom:6px;">
-          Goal: V-Gen Platinum SATA 3 128 GB (Rp176,000)
-        </h2>
-        <div class="progress-bar">
-          <div class="progress-fill" id="progressFill"></div>
-        </div>
-        <p id="progressText">Loading...</p>
+    <div class="progress-section">
+      <h2 style="font-size:16px; color:var(--accent-2); margin-bottom:6px;">
+        Goal: V-Gen Platinum SATA 3 128 GB (Rp176,000)
+      </h2>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
       </div>
+      <p id="progressText">Loading...</p>
     </div>
 
     <div class="panel">
@@ -212,8 +212,16 @@
   let lastProgress = 0;
 
   function updateProgress() {
-    const total = overallTotal() * 1000; // Each 1.000 = Rp1,000
+    const total = overallTotal(); // REMOVED * 1000 - this was causing the error
     const progress = Math.min((total / GOAL) * 100, 100);
+
+    // Handle edge cases
+    if (isNaN(progress) || !isFinite(progress)) {
+      progressFill.style.width = "0%";
+      progressText.textContent = `Rp0 / Rp${formatNumber(GOAL)} (0%)`;
+      lastProgress = 0;
+      return;
+    }
 
     // Animate from previous progress
     const start = lastProgress;
@@ -226,7 +234,7 @@
       progressFill.style.width = current + "%";
       progressFill.style.background = getProgressColor(current);
       progressText.textContent = 
-        `Rp${total.toLocaleString()} / Rp${GOAL.toLocaleString()} (${current.toFixed(1)}%)`;
+        `Rp${formatNumber(total)} / Rp${formatNumber(GOAL)} (${current.toFixed(1)}%)`;
 
       if (t < 1) requestAnimationFrame(animate);
       else lastProgress = end;
@@ -236,7 +244,15 @@
 
   function loadAndRender() {
     const raw = localStorage.getItem(LS_KEY);
-    if (!raw) return;
+    if (!raw) {
+      // Show empty state if no data
+      dates = [];
+      students = [];
+      render();
+      updateProgress();
+      return;
+    }
+    
     try {
       const parsed = JSON.parse(raw);
       dates = parsed.dates || [];
@@ -245,6 +261,8 @@
       students.sort((a, b) => a.name.localeCompare(b.name, 'en', { sensitivity: 'base' }));
     } catch (e) {
       console.warn('parse error', e);
+      dates = [];
+      students = [];
     }
     render();
     updateProgress();
