@@ -195,24 +195,46 @@ table {
   min-width: 900px;
 }
 
-th, td {
-  padding: 10px 12px;
-  text-align: left;
+/* === Fix Name Column Cutoff & Improve Readability === */
+th.name, td.name {
+  width: auto !important;
+  min-width: 160px;
+  max-width: 280px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  padding-left: 12px;
 }
 
-th {
-  background: rgba(30, 30, 40, 0.85);
-  backdrop-filter: blur(6px);
-  color: #c9b4ff;
+td.name {
   font-weight: 600;
+  color: var(--accent);
 }
 
-tr:nth-child(even) {
-  background: rgba(255, 255, 255, 0.03);
+/* === Table Wrap Improvements === */
+.table-wrap {
+  overflow-x: auto;
+  overflow-y: visible;
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(20,20,28,0.8), rgba(10,10,14,0.9));
+  border: 1px solid rgba(255,255,255,0.04);
+  padding: 10px;
 }
 
-tr:hover {
-  background: rgba(255, 255, 255, 0.06);
+/* === Make Table More Readable === */
+table {
+  border-spacing: 0;
+  border-collapse: separate;
+}
+
+th, td {
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+tr:hover td {
+  background: rgba(255, 255, 255, 0.05);
+  transition: background 0.15s ease-in-out;
 }
 
 .compact-mode table td,
