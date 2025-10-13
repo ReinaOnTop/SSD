@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SSD Collection Tracker — Public View</title>
+  <link rel="stylesheet" href="style.css" />
   <style>
     :root {
       --bg:#0e0f14;
@@ -13,111 +14,297 @@
       --accent-2:#FFD0EC;
       --radius:12px;
     }
-    html,body { margin:0; background:linear-gradient(180deg,#0b0c10 0%, #0e0f14 100%); color:#e6e7ee; font-family:"Poppins",sans-serif; height:100%; display:flex; align-items:center; justify-content:center; }
-    .wrap { width:100%; max-width:1200px; padding:16px; display:flex; flex-direction:column; gap:16px; }
-    h1 { color:var(--accent); font-size:22px; margin:0; text-align:center; }
-    .muted { color:var(--muted); font-size:13px; text-align:center; }
-    .panel { background:rgba(25,25,32,0.7); border:1px solid rgba(255,255,255,0.05); border-radius:var(--radius); box-shadow:0 0 20px rgba(0,0,0,0.5); backdrop-filter:blur(8px); overflow:auto; max-height:80vh; -webkit-overflow-scrolling:touch; }
-    table { width:100%; min-width:800px; border-collapse:separate; border-spacing:0; }
-    th, td { padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.05); text-align:left; white-space:nowrap; }
-    thead th { position:sticky; top:0; background:rgba(15,15,20,0.95); backdrop-filter:blur(10px); z-index:2; color:var(--accent); }
-    td.name { font-weight:600; color:#fff; }
-    tr:hover td { background:rgba(255,255,255,0.05); transition:background 0.15s ease; }
-    tfoot td { font-weight:700; border-top:1px solid rgba(255,255,255,0.08); color:var(--accent-2); }
-    .progress-section { text-align:center; margin-top:10px; margin-bottom:10px; }
-    .progress-bar { width:80%; height:20px; background:#1f2544; border-radius:20px; margin:10px auto; overflow:hidden; box-shadow:inset 0 0 6px rgba(0,0,0,0.4); }
-    .progress-fill { height:100%; width:0%; background:linear-gradient(90deg,#81689d,#ffd0ec); border-radius:20px 0 0 20px; transition:width 0.6s ease, background 0.6s ease; }
-    #progressText { font-weight:500; color:var(--accent-2); }
+
+    html,body {
+      margin:0;
+      background:linear-gradient(180deg,#0b0c10 0%, #0e0f14 100%);
+      color:#e6e7ee;
+      font-family:"Poppins",sans-serif;
+      height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .wrap {
+      width:100%;
+      max-width:1200px;
+      padding:16px;
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+    }
+
+    h1 {
+      color:var(--accent);
+      font-size:22px;
+      margin:0;
+      text-align:center;
+    }
+
+    .muted {
+      color:var(--muted);
+      font-size:13px;
+      text-align:center;
+    }
+
+    .panel {
+      background:rgba(25,25,32,0.7);
+      border:1px solid rgba(255,255,255,0.05);
+      border-radius:var(--radius);
+      box-shadow:0 0 20px rgba(0,0,0,0.5);
+      backdrop-filter:blur(8px);
+      overflow:auto;
+      max-height:80vh;
+      -webkit-overflow-scrolling:touch;
+    }
+
+    table {
+      width:100%;
+      min-width:800px;
+      border-collapse:separate;
+      border-spacing:0;
+    }
+
+    th, td {
+      padding:10px 14px;
+      border-bottom:1px solid rgba(255,255,255,0.05);
+      text-align:left;
+      white-space:nowrap;
+    }
+
+    thead th {
+      position:sticky;
+      top:0;
+      background:rgba(15,15,20,0.95);
+      backdrop-filter:blur(10px);
+      z-index:2;
+      color:var(--accent);
+    }
+
+    td.name {
+      font-weight:600;
+      color:#fff;
+    }
+
+    tr:hover td {
+      background:rgba(255,255,255,0.05);
+      transition:background 0.15s ease;
+    }
+
+    tfoot td {
+      font-weight:700;
+      border-top:1px solid rgba(255,255,255,0.08);
+      color:var(--accent-2);
+    }
+
+    /* Progress bar styling */
+    .progress-section {
+      text-align:center;
+      margin-top:10px;
+      margin-bottom:10px;
+    }
+
+    .progress-bar {
+      width:80%;
+      height:20px;
+      background:#1f2544;
+      border-radius:20px;
+      margin:10px auto;
+      overflow:hidden;
+      box-shadow:inset 0 0 6px rgba(0,0,0,0.4);
+    }
+
+    .progress-fill {
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg,#81689d,#ffd0ec);
+      border-radius:20px 0 0 20px;
+      transition:width 0.6s ease, background 0.6s ease;
+    }
+
+    #progressText {
+      font-weight:500;
+      color:var(--accent-2);
+    }
   </style>
 </head>
 <body>
-<div class="wrap">
-  <div>
-    <h1>SSD Collection Tracker</h1>
-    <div class="muted">Public view</div>
-  </div>
-
-  <div class="progress-section">
-    <h2 style="font-size:16px; color:var(--accent-2); margin-bottom:6px;">
-      Goal: V-Gen Platinum SATA 3 128 GB (Rp176,000)
-    </h2>
-    <div class="progress-bar">
-      <div class="progress-fill" id="progressFill"></div>
+  <div class="wrap">
+    <div>
+      <h1>SSD Collection Tracker</h1>
+      <div class="muted">Public view</div>
     </div>
-    <p id="progressText">Loading...</p>
-  </div>
 
-  <div class="panel">
-    <table id="publicTable">
-      <thead>
-        <tr><th>Name</th><th>Total</th></tr>
-      </thead>
-      <tbody id="tableBody"></tbody>
-      <tfoot></tfoot>
-    </table>
+    <div class="progress-section">
+      <h2 style="font-size:16px; color:var(--accent-2); margin-bottom:6px;">
+        Goal: V-Gen Platinum SATA 3 128 GB (Rp176,000)
+      </h2>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <p id="progressText">Loading...</p>
+    </div>
+
+    <div class="panel">
+      <table id="publicTable">
+        <thead id="tableHead"></thead>
+        <tbody id="tableBody"></tbody>
+        <tfoot id="tableFoot"></tfoot>
+      </table>
+    </div>
   </div>
-</div>
 
 <script>
-const BIN_ID = "68ec932fd0ea881f409ffd4c";
-const GOAL = 176000;
+  const LS_KEY = 'ssd-collection-2025-10';
+  const GOAL = 176000;
+  let dates = [], students = [], showTotals = false;
+  const ANIMATE_SPEED = 800; // ms for animation
 
-const tableBody = document.getElementById("tableBody");
-const progressFill = document.getElementById("progressFill");
-const progressText = document.getElementById("progressText");
+  const tableHead = document.getElementById('tableHead');
+  const tableBody = document.getElementById('tableBody');
+  const tableFoot = document.getElementById('tableFoot');
+  const progressFill = document.getElementById('progressFill');
+  const progressText = document.getElementById('progressText');
 
-function formatNumber(n) {
-  return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-}
-
-function getProgressColor(progress) {
-  if (progress < 50) return "linear-gradient(90deg, #81689d, #ffd0ec)";
-  if (progress < 80) return "linear-gradient(90deg, #b784c5, #ffa8d6)";
-  return "linear-gradient(90deg, #00d68f, #b2ffea)";
-}
-
-function parseValue(str) {
-  return Number(str.replace(/\./g, "")) || 0;
-}
-
-async function fetchData() {
-  try {
-    const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`);
-    const data = await res.json();
-    return data.record;
-  } catch (err) {
-    console.error("Fetch error:", err);
-    return null;
+  function fmtDateShort(d) {
+    return new Date(d).toLocaleDateString(undefined, { day: '2-digit', month: 'short' });
   }
-}
 
-function updateTable(students) {
-  tableBody.innerHTML = "";
-  students.forEach(s => {
-    const total = Object.values(s.values || {}).reduce((sum, v) => sum + parseValue(v), 0);
-    const tr = document.createElement("tr");
-    tr.innerHTML = `<td class="name">${s.name}</td><td>Rp${formatNumber(total)}</td>`;
-    tableBody.appendChild(tr);
+  function parseNumber(str) {
+    if (!str) return NaN;
+    const s = String(str).replace(/\./g, '').replace(/,/g, '.').trim();
+    return Number(s);
+  }
+
+  function formatNumber(n) {
+    if (n === '' || n == null || isNaN(n)) return '';
+    const int = Math.floor(n);
+    return int.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  }
+
+  function computeRowTotal(s) {
+    return dates.reduce((sum, d) => {
+      const v = s.values[d];
+      const n = parseNumber(v);
+      return isNaN(n) ? sum : sum + n;
+    }, 0);
+  }
+
+  function totalForDate(d) {
+    return students.reduce((sum, s) => {
+      const v = s.values[d];
+      const n = parseNumber(v);
+      return isNaN(n) ? sum : sum + n;
+    }, 0);
+  }
+
+  function overallTotal() {
+    return students.reduce((sum, s) => sum + computeRowTotal(s), 0);
+  }
+
+  function getProgressColor(progress) {
+    if (progress < 50) return 'linear-gradient(90deg, #81689d, #ffd0ec)';
+    if (progress < 80) return 'linear-gradient(90deg, #b784c5, #ffa8d6)';
+    return 'linear-gradient(90deg, #00d68f, #b2ffea)';
+  }
+
+  let lastProgress = 0;
+
+  function updateProgress() {
+    const total = overallTotal(); // REMOVED * 1000 - this was causing the error
+    const progress = Math.min((total / GOAL) * 100, 100);
+
+    // Handle edge cases
+    if (isNaN(progress) || !isFinite(progress)) {
+      progressFill.style.width = "0%";
+      progressText.textContent = `Rp0 / Rp${formatNumber(GOAL)} (0%)`;
+      lastProgress = 0;
+      return;
+    }
+
+    // Animate from previous progress
+    const start = lastProgress;
+    const end = progress;
+    const startTime = performance.now();
+
+    function animate(time) {
+      const t = Math.min((time - startTime) / ANIMATE_SPEED, 1);
+      const current = start + (end - start) * t;
+      progressFill.style.width = current + "%";
+      progressFill.style.background = getProgressColor(current);
+      progressText.textContent = 
+        `Rp${formatNumber(total)} / Rp${formatNumber(GOAL)} (${current.toFixed(1)}%)`;
+
+      if (t < 1) requestAnimationFrame(animate);
+      else lastProgress = end;
+    }
+    requestAnimationFrame(animate);
+  }
+
+  function loadAndRender() {
+    const raw = localStorage.getItem(LS_KEY);
+    if (!raw) {
+      // Show empty state if no data
+      dates = [];
+      students = [];
+      render();
+      updateProgress();
+      return;
+    }
+    
+    try {
+      const parsed = JSON.parse(raw);
+      dates = parsed.dates || [];
+      students = parsed.students || [];
+      showTotals = parsed.showTotals || false;
+      students.sort((a, b) => a.name.localeCompare(b.name, 'en', { sensitivity: 'base' }));
+    } catch (e) {
+      console.warn('parse error', e);
+      dates = [];
+      students = [];
+    }
+    render();
+    updateProgress();
+  }
+
+  function render() {
+    tableHead.innerHTML = '';
+    tableBody.innerHTML = '';
+    tableFoot.innerHTML = '';
+
+    const trh = document.createElement('tr');
+    trh.innerHTML =
+      `<th class="name">Name</th>` +
+      dates.map(d => `<th>${fmtDateShort(d)}</th>`).join('') +
+      (showTotals ? `<th>Total</th>` : '');
+    tableHead.appendChild(trh);
+
+    for (const s of students) {
+      const tr = document.createElement('tr');
+      tr.innerHTML =
+        `<td class="name">${s.name}</td>` +
+        dates.map(d => `<td>${s.values[d] || ''}</td>`).join('') +
+        (showTotals ? `<td class="row-total">${formatNumber(computeRowTotal(s))}</td>` : '');
+      tableBody.appendChild(tr);
+    }
+
+    if (showTotals) {
+      const trf = document.createElement('tr');
+      trf.innerHTML =
+        `<td class="name">Overall Total</td>` +
+        dates.map(d => `<td>${formatNumber(totalForDate(d))}</td>`).join('') +
+        `<td>${formatNumber(overallTotal())}</td>`;
+      tableFoot.appendChild(trf);
+    }
+  }
+
+  window.addEventListener('storage', e => {
+    if (e.key === LS_KEY) loadAndRender();
   });
-}
 
-function updateProgress(students) {
-  const total = students.reduce((sum, s) => sum + Object.values(s.values || {}).reduce((subSum, v) => subSum + parseValue(v), 0), 0);
-  const percent = Math.min((total / GOAL) * 100, 100);
-  progressFill.style.width = `${percent}%`;
-  progressFill.style.background = getProgressColor(percent);
-  progressText.textContent = `Rp${formatNumber(total)} / Rp${formatNumber(GOAL)} (${percent.toFixed(1)}%)`;
-}
-
-async function refresh() {
-  const json = await fetchData();
-  if (!json || !json.students) return;
-  updateTable(json.students);
-  updateProgress(json.students);
-}
-
-refresh();
-setInterval(refresh, 3000);
+  loadAndRender();
+  setInterval(loadAndRender, 2000);
 </script>
 </body>
 </html>
