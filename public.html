@@ -37,7 +37,7 @@
 
     h1 {
       color:var(--accent);
-      font-size:20px;
+      font-size:22px;
       margin:0;
       text-align:center;
     }
@@ -97,24 +97,55 @@
       border-top:1px solid rgba(255,255,255,0.08);
       color:var(--accent-2);
     }
+
+    /* Progress bar styling */
+    .progress-section {
+      text-align:center;
+      margin-top:10px;
+      margin-bottom:10px;
+    }
+
+    .progress-bar {
+      width:80%;
+      height:20px;
+      background:#1f2544;
+      border-radius:20px;
+      margin:10px auto;
+      overflow:hidden;
+      box-shadow:inset 0 0 6px rgba(0,0,0,0.4);
+    }
+
+    .progress-fill {
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg,#81689d,#ffd0ec);
+      border-radius:20px 0 0 20px;
+      transition:width 0.6s ease, background 0.6s ease;
+    }
+
+    #progressText {
+      font-weight:500;
+      color:var(--accent-2);
+    }
   </style>
 </head>
 <body>
-
-<div class="progress-section">
-  <h2>Goal: V-Gen Platinum SATA 3 128 GB (Rp176,000)</h2>
-  <div class="progress-bar">
-    <div class="progress-fill" id="progressFill"></div>
-  </div>
-  <p id="progressText">Loading...</p>
-</div>
-  
   <div class="wrap">
     <div>
       <h1>SSD Collection Tracker</h1>
       <div class="muted">Public view</div>
+
+      <div class="progress-section">
+        <h2 style="font-size:16px; color:var(--accent-2); margin-bottom:6px;">
+          Goal: V-Gen Platinum SATA 3 128 GB (Rp176,000)
+        </h2>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <p id="progressText">Loading...</p>
+      </div>
     </div>
-    
+
     <div class="panel">
       <table id="publicTable">
         <thead id="tableHead"></thead>
@@ -126,11 +157,14 @@
 
   <script>
     const LS_KEY = 'ssd-collection-2025-10';
+    const GOAL = 176000;
     let dates = [], students = [], showTotals = false;
 
     const tableHead = document.getElementById('tableHead');
     const tableBody = document.getElementById('tableBody');
     const tableFoot = document.getElementById('tableFoot');
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
 
     function fmtDateShort(d){ return new Date(d).toLocaleDateString(undefined,{day:'2-digit',month:'short'}); }
     function parseNumber(str){
@@ -169,6 +203,20 @@
       return students.reduce((sum,s)=>sum+computeRowTotal(s),0);
     }
 
+    function getProgressColor(progress) {
+      if (progress < 50) return 'linear-gradient(90deg, #81689d, #ffd0ec)';
+      if (progress < 80) return 'linear-gradient(90deg, #b784c5, #ffa8d6)';
+      return 'linear-gradient(90deg, #00d68f, #b2ffea)';
+    }
+
+    function updateProgress() {
+      const total = overallTotal() * 1000; // 1.000 = 1000
+      const progress = Math.min((total / GOAL) * 100, 100);
+      progressFill.style.width = progress + "%";
+      progressFill.style.background = getProgressColor(progress);
+      progressText.textContent = `Rp${total.toLocaleString()} / Rp${GOAL.toLocaleString()} (${progress.toFixed(1)}%)`;
+    }
+
     function loadAndRender(){
       const raw = localStorage.getItem(LS_KEY);
       if(!raw) return;
@@ -177,11 +225,10 @@
         dates = parsed.dates || [];
         students = parsed.students || [];
         showTotals = parsed.showTotals || false;
-
-        // Sort students alphabetically
         students.sort((a,b)=>a.name.localeCompare(b.name,'en',{sensitivity:'base'}));
       } catch(e){ console.warn('parse error'); }
       render();
+      updateProgress();
     }
 
     function render(){
@@ -189,14 +236,12 @@
       tableBody.innerHTML = '';
       tableFoot.innerHTML = '';
 
-      // Header
       const trh = document.createElement('tr');
       trh.innerHTML = `<th class="name">Name</th>` + 
                       dates.map(d=>`<th>${fmtDateShort(d)}</th>`).join('') +
                       (showTotals ? `<th>Total</th>` : '');
       tableHead.appendChild(trh);
 
-      // Body
       for(const s of students){
         const tr = document.createElement('tr');
         tr.innerHTML = `<td class="name">${s.name}</td>` +
@@ -205,7 +250,6 @@
         tableBody.appendChild(tr);
       }
 
-      // Footer
       if(showTotals){
         const trf = document.createElement('tr');
         trf.innerHTML = `<td class="name">Overall Total</td>` +
@@ -219,10 +263,7 @@
       if(e.key === LS_KEY) loadAndRender();
     });
 
-    // Initial load
     loadAndRender();
-
-    // Periodic auto-update
     setInterval(loadAndRender, 2000);
   </script>
 </body>
