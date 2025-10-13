@@ -7,66 +7,103 @@
   <link rel="stylesheet" href="style.css" />
   <style>
     :root {
-      --bg:#0e0f14; --panel:#171821; --muted:#9aa0b4; --accent:#81689D; --accent-2:#FFD0EC; --cell:#121219;
-      --radius:12px; --gap:12px;
-      font-family:Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      --bg:#0e0f14;
+      --panel:#171821;
+      --muted:#9aa0b4;
+      --accent:#81689D;
+      --accent-2:#FFD0EC;
+      --radius:12px;
     }
+
     html,body {
-      height:100%; margin:0;
+      margin:0;
       background:linear-gradient(180deg,#0b0c10 0%, #0e0f14 100%);
       color:#e6e7ee;
+      font-family:"Poppins",sans-serif;
+      height:100%;
       display:flex;
       align-items:center;
       justify-content:center;
     }
+
     .wrap {
       width:100%;
       max-width:1200px;
-      padding:24px;
+      padding:16px;
       display:flex;
       flex-direction:column;
       gap:16px;
     }
-    h1 { color:var(--accent); font-size:20px; margin:0 0 4px 0; text-align:center; }
-    .muted { color:var(--muted); font-size:13px; text-align:center; }
+
+    h1 {
+      color:var(--accent);
+      font-size:20px;
+      margin:0;
+      text-align:center;
+    }
+
+    .muted {
+      color:var(--muted);
+      font-size:13px;
+      text-align:center;
+    }
 
     .panel {
-      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.06));
-      padding:16px;
+      background:rgba(25,25,32,0.7);
+      border:1px solid rgba(255,255,255,0.05);
       border-radius:var(--radius);
-      border:1px solid rgba(255,255,255,0.03);
+      box-shadow:0 0 20px rgba(0,0,0,0.5);
+      backdrop-filter:blur(8px);
       overflow:auto;
+      max-height:80vh;
+      -webkit-overflow-scrolling:touch;
     }
 
     table {
       width:100%;
+      min-width:800px;
       border-collapse:separate;
       border-spacing:0;
-      min-width:900px;
     }
+
     th, td {
-      padding:8px 10px;
-      border-bottom:1px solid rgba(255,255,255,0.03);
+      padding:10px 14px;
+      border-bottom:1px solid rgba(255,255,255,0.05);
       text-align:left;
       white-space:nowrap;
     }
+
     thead th {
-      position:sticky; top:0;
-      background:linear-gradient(180deg, rgba(20,20,28,0.9), rgba(18,18,22,0.9));
-      backdrop-filter:blur(4px);
+      position:sticky;
+      top:0;
+      background:rgba(15,15,20,0.95);
+      backdrop-filter:blur(10px);
       z-index:2;
+      color:var(--accent);
     }
-    td.name { font-weight:600; }
-    th.name { width:200px; }
-    .row-total { font-weight:700; color:var(--accent-2); }
-    tfoot td { font-weight:700; border-top:1px solid rgba(255,255,255,0.04); }
+
+    td.name {
+      font-weight:600;
+      color:#fff;
+    }
+
+    tr:hover td {
+      background:rgba(255,255,255,0.05);
+      transition:background 0.15s ease;
+    }
+
+    tfoot td {
+      font-weight:700;
+      border-top:1px solid rgba(255,255,255,0.08);
+      color:var(--accent-2);
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
     <div>
       <h1>SSD Collection Tracker</h1>
-      <div class="muted small">Public view (auto-updates)</div>
+      <div class="muted">Public view (auto-updates + A–Z sort)</div>
     </div>
 
     <div class="panel">
@@ -131,6 +168,9 @@
         dates = parsed.dates || [];
         students = parsed.students || [];
         showTotals = parsed.showTotals || false;
+
+        // Sort students alphabetically
+        students.sort((a,b)=>a.name.localeCompare(b.name,'en',{sensitivity:'base'}));
       } catch(e){ console.warn('parse error'); }
       render();
     }
@@ -161,12 +201,11 @@
         const trf = document.createElement('tr');
         trf.innerHTML = `<td class="name">Overall Total</td>` +
           dates.map(d=>`<td>${formatNumber(totalForDate(d))}</td>`).join('') +
-          `<td class="row-total">${formatNumber(overallTotal())}</td>`;
+          `<td>${formatNumber(overallTotal())}</td>`;
         tableFoot.appendChild(trf);
       }
     }
 
-    // Watch for changes from index.html
     window.addEventListener('storage', (e)=>{
       if(e.key === LS_KEY) loadAndRender();
     });
@@ -174,7 +213,7 @@
     // Initial load
     loadAndRender();
 
-    // Also refresh every 2s in case storage event doesn’t trigger (some browsers)
+    // Periodic auto-update
     setInterval(loadAndRender, 2000);
   </script>
 </body>
